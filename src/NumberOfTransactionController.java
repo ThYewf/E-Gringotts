@@ -66,8 +66,8 @@ public class NumberOfTransactionController implements Initializable{
         Connection conectDb = connectNow.getConnection();
 
         try {
-            String query = "SELECT * FROM transactions3 WHERE date = CURDATE()";//undone
-            ResultSet result = conectDb.createStatement().executeQuery(query);
+            String query = "SELECT * FROM transactions3 WHERE DATE(date) = CURDATE()";
+                        ResultSet result = conectDb.createStatement().executeQuery(query);
 
             while(result.next()) {
                 Transaction transaction = new Transaction();

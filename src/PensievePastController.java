@@ -13,7 +13,10 @@ import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
@@ -21,6 +24,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 public class PensievePastController implements Initializable{
     //to create a list for transaction history of a user
@@ -56,6 +60,8 @@ public class PensievePastController implements Initializable{
     private Button okBtn;
     @FXML
     private TextField textField;
+    @FXML
+    private Button backButton;
     
     //display the transaction history based on the choice selected
     @FXML
@@ -147,8 +153,20 @@ public class PensievePastController implements Initializable{
      //initialize the choice box for filtering transaction history
      public void initializeChoiceBox() {
         choiceBox.setItems(FXCollections.observableArrayList("Most Recent", "Highest Amount", "Lowest Amount", "Category", "Amount Threshold"));
+        backButton.setOnAction(event -> switchScene("UserInterface.fxml"));
+
     }
 
+ @FXML
+     private void switchScene(String fxmlFile) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private String getLoggedInUserID() {
         String userID = null;

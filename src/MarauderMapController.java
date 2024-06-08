@@ -1,10 +1,11 @@
+
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,8 +20,8 @@ import java.util.ArrayList;
 
 public class MarauderMapController {
     private final String SECUREPINPAGE = "TransactionSecurePinInterface.fxml";
-    private final int SECUREPINPAGEHEIGHT = 500;
-    private final int SECUREPINPAGEWIDTH = 350;
+    private final int SECUREPINPAGEHEIGHT = 350;
+    private final int SECUREPINPAGEWIDTH = 500;
     private static final String DB_URL = "jdbc:mysql://localhost:3306/user";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "wia1002";
@@ -105,24 +106,34 @@ public class MarauderMapController {
         //if the secure pin is correct then transfer the amount to the receipient
         //if the secure pin enter wrong 3 time then the application will close
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(SECUREPINPAGE));
-            Stage numberOfTransactionStage = new Stage();
-            numberOfTransactionStage.setTitle("Number of Transaction");
-            numberOfTransactionStage.setScene(new Scene(root, SECUREPINPAGEHEIGHT, SECUREPINPAGEWIDTH));
-            numberOfTransactionStage.setResizable(false);
-            numberOfTransactionStage.show();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(SECUREPINPAGE));
+            Parent root = loader.load();
+
+            TransactionSecurePinController sPinController = loader.getController();
+            sPinController.setMainController(this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Enter Secure Pin");
+            stage.setScene(new Scene(root, SECUREPINPAGEWIDTH, SECUREPINPAGEHEIGHT));
+            stage.setResizable(false);
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            e.getCause();
-        }
-
-        if(isAnyActiveUser() == true) {
-            //transfer the amount to the receipient
-            transactionSuccessfullyLabel.setText("Transaction successfully!");
-            Transaction newTransaction=addTransactionToDatabase(amount, category);
-            showTransactionReceipt(currentUser, receipient, amount, newTransaction);
         }
         
+    }
+
+    public void proceedWithTransaction() {
+        User<UserTier> receipient = getReceipient();
+        User<UserTier> currentUser = LoggedInUser();
+        double amount = Double.parseDouble(AmountTextField.getText());
+        String category = CategoryTextField.getText();
+
+        if (isAnyActiveUser()) {
+            transactionSuccessfullyLabel.setText("Transaction successfully!");
+            Transaction newTransaction = addTransactionToDatabase(amount, category);
+            showTransactionReceipt(currentUser, receipient, amount, newTransaction);
+        }
     }
 
     private void showTransactionReceipt(User<UserTier> currentUser, User<UserTier> recipient, double amount, Transaction newTransaction) {
@@ -130,9 +141,7 @@ public class MarauderMapController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("receipt.fxml"));
             Parent root = loader.load();
 
-            // Access the controller for the loaded FXML
             MarauderMapController controller = loader.getController();
-
             controller.setTransactionDetails(newTransaction, currentUser, recipient);
 
             Stage stage = new Stage();
@@ -322,7 +331,7 @@ public class MarauderMapController {
             DatabaseConnection2 connectNow = new DatabaseConnection2();
             Connection connectDb = connectNow.getConnection();
             String getActiveUser = "SELECT * FROM users WHERE status = 'Active'";//get the user with active status in database
-    
+
             try{
                 Statement statement = connectDb.createStatement();
                 ResultSet result = statement.executeQuery(getActiveUser);
@@ -336,5 +345,5 @@ public class MarauderMapController {
                 e.getCause();
             }
             return false;
-        }
-}
+       }
+    }

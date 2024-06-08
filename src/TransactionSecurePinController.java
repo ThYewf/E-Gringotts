@@ -1,14 +1,14 @@
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
-import javafx.application.Platform;
 
 public class TransactionSecurePinController {
 
@@ -19,50 +19,54 @@ public class TransactionSecurePinController {
     @FXML
     private Button confirmButton;
 
-    private int attemp = 0;
+    private int attempt = 0;
     private String userID = getActiveUser();
+    private MarauderMapController mainController;
 
-    public void confirmButtonOnAction(){
-        int pin = Integer.parseInt(securePinField.getText());//the pin enter by user
+    public void setMainController(MarauderMapController mainController) {
+        this.mainController = mainController;
+    }
+
+    @FXML
+    public void confirmButtonOnAction() {
+        int pin = Integer.parseInt(securePinField.getText()); // the pin entered by user
         SecurePin securePin = new SecurePin();
 
-        if(securePin.validatePin(pin,this.userID) == true){//if the password enter is correct then close the window of secure pin
-            
+        if (securePin.validatePin(pin, this.userID)) { // if the password entered is correct then close the window of secure pin
             Stage stage = (Stage) confirmButton.getScene().getWindow();
             stage.close();
-        }else{//if the password enter is incorrect user have 2 more attemp to enter the correct password, if all attemp is wrong then close the application
+            mainController.proceedWithTransaction(); // Call the method to proceed with the transaction
+        } else { // if the password entered is incorrect user has 2 more attempts to enter the correct password, if all attempts are wrong then close the application
             incorrectPassword();
         }
     }
 
-    //if the password enter is incorrect user have 2 more attemp to enter the correct password, if all attemp is wrong then close the application
-    public void incorrectPassword(){
-        attemp++;
-        if(attemp == 1){
-            incorrectPasswordLabel.setText("Incorrect Password, 2 more attemp");
-        }else if(attemp == 2){
-            incorrectPasswordLabel.setText("Incorrect Password, 1 more attemp");
-        }else{        
+    public void incorrectPassword() {
+        attempt++;
+        if (attempt == 1) {
+            incorrectPasswordLabel.setText("Incorrect Password, 2 more attempts");
+        } else if (attempt == 2) {
+            incorrectPasswordLabel.setText("Incorrect Password, 1 more attempt");
+        } else {
             inactivateUser();
-            Platform.exit(); //close the application, terminate all stage and exit the application
+            Platform.exit(); // close the application, terminate all stages and exit the application
         }
     }
 
-    //search for active user to get the userID to know which user is logging in
     public String getActiveUser() {
         DatabaseConnection2 connectNow = new DatabaseConnection2();
         Connection connectDb = connectNow.getConnection();
         String userID = "";
 
-        String active = "SELECT userID, status FROM Users WHERE status = 'active'";
+        String active = "SELECT userID, status FROM users WHERE status = 'ACTIVE'";
 
         try {
             Statement statement = connectDb.createStatement();
             ResultSet rs = statement.executeQuery(active);
-    
-            while(rs.next()) {
+
+            while (rs.next()) {
                 userID = rs.getString("userID");
-            } 
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,11 +75,10 @@ public class TransactionSecurePinController {
         return userID;
     }
 
-    //inactivate user, when user logout the status will change ACTIVE to INACTIVE
     private void inactivateUser() {
         DatabaseConnection2 connectNow = new DatabaseConnection2();
         Connection connectDb = connectNow.getConnection();
-        String inactivateUserQuery = "UPDATE Users SET status = 'INACTIVE' WHERE status = 'ACTIVE'";
+        String inactivateUserQuery = "UPDATE users SET status = 'INACTIVE' WHERE status = 'ACTIVE'";
 
         try {
             Statement statement = connectDb.createStatement();
@@ -84,25 +87,5 @@ public class TransactionSecurePinController {
             e.printStackTrace();
             e.getCause();
         }
-    }
-
-    private boolean isAnyActiveUser() {
-        DatabaseConnection2 connectNow = new DatabaseConnection2();
-        Connection connectDb = connectNow.getConnection();
-        String getActiveUser = "SELECT * FROM users WHERE status = 'Active'";//get the user with active status in database
-
-        try{
-            Statement statement = connectDb.createStatement();
-            ResultSet result = statement.executeQuery(getActiveUser);
-    
-            while(result.next()){//if there is any active user in the database
-                return true;
-            }
-    
-        } catch(Exception e){
-            e.printStackTrace();
-            e.getCause();
-        }
-        return false;
     }
 }

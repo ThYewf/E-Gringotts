@@ -11,6 +11,7 @@ public class Transaction{
     public double balance;
     public Timestamp date;
     public String category;
+    public String payment_method;
 
     public Transaction(){
         this.transactionID=null;
@@ -20,6 +21,7 @@ public class Transaction{
         this.balance=0.00;
         this.date=null;
         this.category=null;
+        this.payment_method=null;
     }
 
     public Transaction(String userID, String recipientID, double amount, double balance, String category){
@@ -63,6 +65,9 @@ public class Transaction{
     public void setCategory(String category){
         this.category=category;
     }
+    public void setPaymentMethod(String payment_method){
+        this.payment_method=payment_method;
+    }
 
     public String getTransactionID(){
         return this.transactionID;
@@ -85,7 +90,9 @@ public class Transaction{
     public String getCategory(){
         return this.category;
     }
-
+    public String getPaymentMethod(){
+        return this.payment_method;
+    }
     public String generateTransactionID() {
         StringBuilder sb = new StringBuilder();
         while(sb.length() < 6) {
