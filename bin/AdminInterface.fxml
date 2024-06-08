@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AdminController">
+   <children>
+      <AnchorPane prefHeight="60.0" prefWidth="500.0" style="-fx-background-color: grey;">
+         <children>
+            <Label fx:id="HelloLabel" layoutX="34.0" layoutY="21.0" text="HELLO, GOBLIN">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Button fx:id="logoutButton" layoutX="422.0" layoutY="16.0" mnemonicParsing="false" onAction="#logoutButtonOnAction" text="Logout" />
+         </children>
+      </AnchorPane>
+      <Button fx:id="numberOfUserButton" layoutX="59.0" layoutY="108.0" mnemonicParsing="false" onAction="#numberOfUserButtonOnAction" prefHeight="26.0" prefWidth="400.0" text="Number Of User" />
+      <Button fx:id="numberOfTransactionButton" layoutX="58.0" layoutY="162.0" mnemonicParsing="false" onAction="#numberOfTransactionButtonOnAction" prefHeight="26.0" prefWidth="400.0" text="Number of Transaction" />
+      <Button fx:id="StatisticalDataButton" layoutX="58.0" layoutY="215.0" mnemonicParsing="false" onAction="#StatisticalDataButtonOnAction" prefHeight="26.0" prefWidth="400.0" text="Statistical Data" />
+   </children>
+</AnchorPane>

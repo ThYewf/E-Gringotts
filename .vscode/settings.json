@@ -1,0 +1,21 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Program Files (x86)\\MySQL\\Connector J 8.0\\mysql-connector-j-8.0.33.jar",
+        "c:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib\\javafx.controls.jar",
+        "c:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib\\javafx.fxml.jar",
+        "c:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib\\javafx.graphics.jar",
+        "c:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib\\javafx.media.jar",
+        "c:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib\\javafx.swing.jar",
+        "c:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib\\javafx.web.jar",
+        "c:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib\\javafx.base.jar",
+        "c:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib\\javafx-swt.jar",
+        "c:\\Users\\thyew\\Downloads\\okhttp-3.0.0-RC1.jar",
+        "c:\\Users\\thyew\\Downloads\\gson-2.11.0.jar",
+        "c:\\Users\\thyew\\Downloads\\okio-1.8.0.jar",
+        "c:\\Users\\thyew\\Downloads\\javax.mail-1.6.2.jar",
+        "c:\\Users\\thyew\\Downloads\\javax.activation-1.2.0.jar"
+    ]
+}

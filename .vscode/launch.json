@@ -1,0 +1,106 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "MainApp",
+            "request": "launch",
+            "mainClass": "MainApp",
+            "projectName": "project_b5e8cfd4",
+            "vmArgs": "--module-path C:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib --add-modules javafx.controls,javafx.fxml"
+
+        },
+        {
+            "type": "java",
+            "name": "map",
+            "request": "launch",
+            "mainClass": "map",
+            "projectName": "project_b5e8cfd4"
+        },
+        {
+            "type": "java",
+            "name": "divination",
+            "request": "launch",
+            "mainClass": "divination",
+            "projectName": "project_b5e8cfd4",
+            "vmArgs": "--module-path C:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "app",
+            "request": "launch",
+            "mainClass": "app",
+            "projectName": "project_b5e8cfd4",
+            "vmArgs": "--module-path C:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "LoginMain",
+            "request": "launch",
+            "mainClass": "LoginMain",
+            "projectName": "project_b5e8cfd4",
+            "vmArgs": "--module-path C:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "HelloWorld",
+            "request": "launch",
+            "mainClass": "HelloWorld",
+            "projectName": "project_b5e8cfd4",
+            "vmArgs": "--module-path C:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "ChatBot",
+            "request": "launch",
+            "mainClass": "ChatBot",
+            "projectName": "project_b5e8cfd4",
+            "vmArgs": "--module-path C:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "PersonalisedChatbot",
+            "request": "launch",
+            "mainClass": "PersonalisedChatbot",
+            "projectName": "project_b5e8cfd4"
+        },
+        {
+            "type": "java",
+            "name": "Demo",
+            "request": "launch",
+            "mainClass": "Demo",
+            "projectName": "project_b5e8cfd4"
+        },
+        {
+            "type": "java",
+            "name": "personalisedChatbot",
+            "request": "launch",
+            "mainClass": "personalisedChatbot",
+            "projectName": "project_b5e8cfd4"
+        },
+        {
+            "type": "java",
+            "name": "runMain",
+            "request": "launch",
+            "mainClass": "runMain",
+            "projectName": "project_b5e8cfd4"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "project_b5e8cfd4",
+            "vmArgs": "--module-path C:\\Users\\thyew\\Downloads\\openjfx-21.0.1_windows-x64_bin-sdk\\javafx-sdk-21.0.1\\lib --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}
