@@ -1,18 +1,30 @@
-## Getting Started
+## TOPIC 1: E-GRINGOTTS 
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+##### Group Name: HARRY POTTER 
+##### OCC 2 
 
-## Folder Structure
+![Alt text](src/gringotts pic.png)
 
-The workspace contains two folders by default, where:
+## Basic Requirement 
+a. Account Creation, Transactions & User Types 
+b. Pensieve Past (Transaction History)
+c. Sorting Hat Select (Transfer filter)
+d. Marauder’s Map (Find friends for transfer based on phone or name)
+e. Gringotts Exchange (Currency conversion)
+f. Divination Data (Analytics of expenditure through category)
+g. Hogwarts Library (Usage of Database)
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Extra Features
+a. Enchanted Interface (Graphical User Interface, GUI)
+b. Gringotts Guard Key (Integrate Security Pin)
+c. Fidelius Charm (Password Salting)
+d. Gringotts Glimpse (Email Notification)
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+## Database
+##### -MYSQL
+TABLES:
+-users
+-transaction3
+-balance
+-exchangerates
