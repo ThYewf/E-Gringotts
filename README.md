@@ -3,8 +3,7 @@
 ##### Group Name: HARRY POTTER 
 ##### OCC 2 
 
-![alt text](src/gringotts pic.png)
-
+![gringotts pic](https://github.com/ThYewf/E-Gringotts/assets/152830466/a814946f-e58f-4880-87ad-37ece0cb7125)
 
 ## Basic Requirement 
 a. Account Creation, Transactions & User Types 
@@ -32,7 +31,7 @@ d. Gringotts Glimpse (Email Notification)
 
 
 ## Database
-##### -MYSQL
+##### MYSQL
 TABLES:
 <br>
 -users
