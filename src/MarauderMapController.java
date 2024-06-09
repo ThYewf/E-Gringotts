@@ -18,6 +18,8 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
+import javax.mail.MessagingException;
+
 public class MarauderMapController {
     private final String SECUREPINPAGE = "TransactionSecurePinInterface.fxml";
     private final int SECUREPINPAGEHEIGHT = 350;
@@ -124,16 +126,46 @@ public class MarauderMapController {
     }
 
     public void proceedWithTransaction() {
+        String userEmail = getUserEmail();
         User<UserTier> receipient = getReceipient();
         User<UserTier> currentUser = LoggedInUser();
         double amount = Double.parseDouble(AmountTextField.getText());
         String category = CategoryTextField.getText();
 
         if (isAnyActiveUser()) {
+                // Send the login notification email
+        if (userEmail != null) {
+            emailsender emailSender = new emailsender();
+            try {
+                emailSender.sendEmail(userEmail, "Transaction Notification", "You have successfully make a transactions.");
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
             transactionSuccessfullyLabel.setText("Transaction successfully!");
             Transaction newTransaction = addTransactionToDatabase(amount, category);
             showTransactionReceipt(currentUser, receipient, amount, newTransaction);
         }
+    }
+
+    
+    public String getUserEmail() {
+        DatabaseConnection2 connectNow = new DatabaseConnection2();
+        Connection connectDb = connectNow.getConnection();
+        String email = "";
+    
+        try {
+            String query = "SELECT address FROM Users WHERE status = 'active'";
+            ResultSet result = connectDb.createStatement().executeQuery(query);
+    
+            if(result.next()) {
+                email = result.getString("address");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    
+        return email;
     }
 
     private void showTransactionReceipt(User<UserTier> currentUser, User<UserTier> recipient, double amount, Transaction newTransaction) {

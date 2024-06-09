@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.mail.MessagingException;
+
 import javafx.application.Platform;
 
 public class SecurePinController {
@@ -38,11 +40,43 @@ public class SecurePinController {
         if(securePin.validatePin(pin,this.userID) == true){//if the password enter is correct then close the window of secure pin
             checkTier(userID); //check and update user tier before redirect to user page
             userPage();//run user page after user login
+
+
+             String userEmail = getUserEmail();
+
+        // Send the login notification email
+        if (userEmail != null) {
+            emailsender emailSender = new emailsender();
+            try {
+                emailSender.sendEmail(userEmail, "Login Notification", "You have successfully logged in.");
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
             Stage stage = (Stage) confirmButton.getScene().getWindow();
             stage.close();
         }else{//if the password enter is incorrect user have 2 more attemp to enter the correct password, if all attemp is wrong then close the application
             incorrectPassword();
         }
+    }
+
+    public String getUserEmail() {
+        DatabaseConnection2 connectNow = new DatabaseConnection2();
+        Connection connectDb = connectNow.getConnection();
+        String email = "";
+    
+        try {
+            String query = "SELECT address FROM Users WHERE status = 'active'";
+            ResultSet result = connectDb.createStatement().executeQuery(query);
+    
+            if(result.next()) {
+                email = result.getString("address");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    
+        return email;
     }
 
     //before redirect to user page, check user balance and tier

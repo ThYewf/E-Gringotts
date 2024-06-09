@@ -28,6 +28,7 @@ public class divinationModel {
     String activeUserId =  getActiveUserID();
 
 
+    // Get the total expenditure of the active user
     public Map<String, Double> getCategoryExpenditure(String activeUserId) {
         
         String query = "SELECT category, amount FROM transactions3 WHERE userID = ?";
@@ -55,12 +56,12 @@ public class divinationModel {
         return categoryExpenditureMap;
     }
 
-    
+    // Get the total expenditure of the active user
     public Map<String, Double> getFilteredExpenditure(String activeUserId, LocalDate date, String category, String monthly, String paymentMethod) {
         Map<String, Double> expenditureData = new HashMap<>();
 
         DatabaseConnection obj = new DatabaseConnection();
-
+    // filtered by date, category, monthly, payment method
             try (Connection connectDb = obj.getConnection()) {
             StringBuilder query = new StringBuilder("SELECT category, SUM(amount) FROM transactions3 WHERE userID = ?");
 

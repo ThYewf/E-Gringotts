@@ -16,70 +16,73 @@ import javafx.scene.control.Alert.AlertType;
 
 public class ExchangeRateModel {
 
+    // add new currency to the database , update the exchange rate if the currency
+    // already exist
     public void addCurrency(String source, String destination, double rate, double fee) {
-        String sql = "INSERT INTO ExchangeRates (source_currency, destination_currency, exchange_rate, fee) VALUES (?, ?, ?, ?) " +
-                     "ON DUPLICATE KEY UPDATE exchange_rate = VALUES(exchange_rate), fee = VALUES(fee)";
-    
+        String sql = "INSERT INTO ExchangeRates (source_currency, destination_currency, exchange_rate, fee) VALUES (?, ?, ?, ?) "
+                +
+                "ON DUPLICATE KEY UPDATE exchange_rate = VALUES(exchange_rate), fee = VALUES(fee)";
+
         DatabaseConnection obj = new DatabaseConnection();
-    
+
         try (Connection connectDb = obj.getConnection()) {
             PreparedStatement stmt = connectDb.prepareStatement(sql);
             stmt.setString(1, source);
             stmt.setString(2, destination);
             stmt.setDouble(3, rate);
             stmt.setDouble(4, fee);
-    
+
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error inserting or updating exchange rate in database: " + e.getMessage());
         }
     }
 
- 
-
-
+    // calculate the exchange rate from source currency to destination currency
     public double calculateExchangeRate(String source, String destination, double amount) {
         boolean rateFound = false;
         String sql = "SELECT source_currency, destination_currency, exchange_rate, fee FROM ExchangeRates";
         DatabaseConnection obj = new DatabaseConnection();
-    
+
         try (Connection connectDb = obj.getConnection()) {
             PreparedStatement stmt = connectDb.prepareStatement(sql);
-    
+
             // Create a graph of currencies and exchange rates
             Map<String, List<CurrencyNode>> graph = new HashMap<>();
-    
+
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     String sourceCurrency = rs.getString("source_currency");
                     String destinationCurrency = rs.getString("destination_currency");
                     double exchangeRate = rs.getDouble("exchange_rate");
                     double fee = rs.getDouble("fee");
-    
+
                     graph.putIfAbsent(sourceCurrency, new ArrayList<>());
                     graph.get(sourceCurrency).add(new CurrencyNode(destinationCurrency, exchangeRate, fee));
                 }
             }
-    
-            // Use BFS to find the shortest path from the source currency to the destination currency
+
+            // Use BFS to find the shortest path from the source currency to the destination
+            // currency
             Queue<CurrencyNode> queue = new LinkedList<>();
             queue.add(new CurrencyNode(source, 1, 0));
-    
+
             while (!queue.isEmpty()) {
                 CurrencyNode node = queue.poll();
-    
+
                 if (node.currency.equals(destination)) {
                     rateFound = true;
                     return amount * node.rate;
                 }
-    
+
                 if (graph.containsKey(node.currency)) {
                     for (CurrencyNode neighbor : graph.get(node.currency)) {
-                        queue.add(new CurrencyNode(neighbor.currency, node.rate * neighbor.rate, node.fee + neighbor.fee));
+                        queue.add(new CurrencyNode(neighbor.currency, node.rate * neighbor.rate,
+                                node.fee + neighbor.fee));
                     }
                 }
             }
-    
+
             if (!rateFound) {
                 showAlert(source, destination);
             }
@@ -89,47 +92,51 @@ public class ExchangeRateModel {
             return 0;
         }
     }
-    
+
+    // calculate the total fee for exchanging the amount from source currency to
+    // destination currency
     public double calculateTotalFee(String source, String destination, double amount) {
         boolean rateFound = false;
         String sql = "SELECT source_currency, destination_currency, exchange_rate, fee FROM ExchangeRates";
         DatabaseConnection obj = new DatabaseConnection();
-    
+
         try (Connection connectDb = obj.getConnection()) {
             PreparedStatement stmt = connectDb.prepareStatement(sql);
-    
+
             // Create a graph of currencies and exchange rates
             Map<String, List<CurrencyNode>> graph = new HashMap<>();
-    
+
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     String sourceCurrency = rs.getString("source_currency");
                     String destinationCurrency = rs.getString("destination_currency");
                     double exchangeRate = rs.getDouble("exchange_rate");
                     double fee = rs.getDouble("fee");
-    
+
                     graph.putIfAbsent(sourceCurrency, new ArrayList<>());
                     graph.get(sourceCurrency).add(new CurrencyNode(destinationCurrency, exchangeRate, fee));
                 }
             }
-    
-            // Use BFS to find the shortest path from the source currency to the destination currency
+
+            // Use BFS to find the shortest path from the source currency to the destination
+            // currency
             Queue<CurrencyNode> queue = new LinkedList<>();
             queue.add(new CurrencyNode(source, 1, 0));
             double totalFee = 0;
-    
+
             while (!queue.isEmpty()) {
                 CurrencyNode node = queue.poll();
-    
+
                 if (node.currency.equals(destination)) {
                     rateFound = true;
                     return totalFee;
                 }
-    
+
                 if (graph.containsKey(node.currency)) {
                     for (CurrencyNode neighbor : graph.get(node.currency)) {
                         totalFee += amount * neighbor.fee;
-                        queue.add(new CurrencyNode(neighbor.currency, node.rate * neighbor.rate, node.fee + neighbor.fee));
+                        queue.add(new CurrencyNode(neighbor.currency, node.rate * neighbor.rate,
+                                node.fee + neighbor.fee));
                     }
                 }
             }
@@ -143,7 +150,7 @@ public class ExchangeRateModel {
             return 0;
         }
     }
-    
+
     public void showAlert(String source, String destination) {
         Platform.runLater(() -> {
             Alert alert = new Alert(AlertType.ERROR);
@@ -153,92 +160,93 @@ public class ExchangeRateModel {
             alert.showAndWait();
         });
     }
-    
-public String getActiveUserID() {
-    String sql = "SELECT userID FROM users WHERE status = 'active'";
 
-    DatabaseConnection obj = new DatabaseConnection();
+    // return the active user ID
+    public String getActiveUserID() {
+        String sql = "SELECT userID FROM users WHERE status = 'active'";
 
-    try (Connection connectDb = obj.getConnection();
-         PreparedStatement stmt = connectDb.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
+        DatabaseConnection obj = new DatabaseConnection();
 
-        if (rs.next()) {
-            return rs.getString("userID");
-        }
-    } catch (SQLException e) {
-        System.out.println("Error getting active user ID: " + e.getMessage());
-    }
+        try (Connection connectDb = obj.getConnection();
+                PreparedStatement stmt = connectDb.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
 
-    return null;
-}
-
-
-
-
-public void exchangeCurrency(String userID, String sourceCurrency, String destinationCurrency, double amount) {
-  
-    String updateBalanceSql = "INSERT INTO balance (userID, currency, amount) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE amount = amount + VALUES(amount)";
-    String deductFeeSql = "UPDATE users SET balance = balance - ? WHERE userID = ?";
-
-    DatabaseConnection obj = new DatabaseConnection();
-
-    try (Connection connectDb = obj.getConnection();
-         PreparedStatement updateBalanceStmt = connectDb.prepareStatement(updateBalanceSql);
-         PreparedStatement deductFeeStmt = connectDb.prepareStatement(deductFeeSql)) {
-
-        double exchangeRate = calculateExchangeRate(sourceCurrency, destinationCurrency, amount);
-        double totalFee = calculateTotalFee(sourceCurrency, destinationCurrency, amount);
-
-        updateBalanceStmt.setString(1, userID);
-        updateBalanceStmt.setString(2, destinationCurrency);
-        updateBalanceStmt.setDouble(3, exchangeRate);
-        updateBalanceStmt.executeUpdate();
-
-        deductFeeStmt.setDouble(1, totalFee+amount);
-        deductFeeStmt.setString(2, userID);
-       deductFeeStmt.executeUpdate();
-
-    } catch (SQLException e) {
-        System.out.println("Error exchanging currency: " + e.getMessage());
-    }
-}
-
-public double getUserBalance(String userID) {
-    String sql = "SELECT balance FROM users WHERE userID = ?";
-    DatabaseConnection obj = new DatabaseConnection();
-    try (Connection connectDb = obj.getConnection();
-         PreparedStatement stmt = connectDb.prepareStatement(sql)) {
-        stmt.setString(1, userID);
-        try (ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
-                return rs.getDouble("balance");
+                return rs.getString("userID");
             }
+        } catch (SQLException e) {
+            System.out.println("Error getting active user ID: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.out.println("Error getting user balance: " + e.getMessage());
-    }
-    return 0;
-}
 
-
-public List<String> getUniqueCurrencies() {
-    String sql = "SELECT DISTINCT source_currency FROM ExchangeRates UNION SELECT DISTINCT destination_currency FROM ExchangeRates";
-    DatabaseConnection obj = new DatabaseConnection();
-    List<String> currencies = new ArrayList<>();
-
-    try (Connection connectDb = obj.getConnection()) {
-        PreparedStatement stmt = connectDb.prepareStatement(sql);
-
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                currencies.add(rs.getString(1));
-            }
-        }
-    } catch (SQLException e) {
-        System.out.println("Error retrieving unique currencies: " + e.getMessage());
+        return null;
     }
 
-    return currencies;
+    // performs a currency exchange for a user, updating their balance and deducting
+    // the fee.
+    public void exchangeCurrency(String userID, String sourceCurrency, String destinationCurrency, double amount) {
+
+        String updateBalanceSql = "INSERT INTO balance (userID, currency, amount) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE amount = amount + VALUES(amount)";
+        String deductFeeSql = "UPDATE users SET balance = balance - ? WHERE userID = ?";
+
+        DatabaseConnection obj = new DatabaseConnection();
+
+        try (Connection connectDb = obj.getConnection();
+                PreparedStatement updateBalanceStmt = connectDb.prepareStatement(updateBalanceSql);
+                PreparedStatement deductFeeStmt = connectDb.prepareStatement(deductFeeSql)) {
+
+            double exchangeRate = calculateExchangeRate(sourceCurrency, destinationCurrency, amount);
+            double totalFee = calculateTotalFee(sourceCurrency, destinationCurrency, amount);
+
+            updateBalanceStmt.setString(1, userID);
+            updateBalanceStmt.setString(2, destinationCurrency);
+            updateBalanceStmt.setDouble(3, exchangeRate);
+            updateBalanceStmt.executeUpdate();
+
+            deductFeeStmt.setDouble(1, totalFee + amount);
+            deductFeeStmt.setString(2, userID);
+            deductFeeStmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Error exchanging currency: " + e.getMessage());
+        }
+    }
+
+    // retrieves the balance of a specific user.
+    public double getUserBalance(String userID) {
+        String sql = "SELECT balance FROM users WHERE userID = ?";
+        DatabaseConnection obj = new DatabaseConnection();
+        try (Connection connectDb = obj.getConnection();
+                PreparedStatement stmt = connectDb.prepareStatement(sql)) {
+            stmt.setString(1, userID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("balance");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting user balance: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // retrieves a list of all unique currencies in the database.
+    public List<String> getUniqueCurrencies() {
+        String sql = "SELECT DISTINCT source_currency FROM ExchangeRates UNION SELECT DISTINCT destination_currency FROM ExchangeRates";
+        DatabaseConnection obj = new DatabaseConnection();
+        List<String> currencies = new ArrayList<>();
+
+        try (Connection connectDb = obj.getConnection()) {
+            PreparedStatement stmt = connectDb.prepareStatement(sql);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    currencies.add(rs.getString(1));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving unique currencies: " + e.getMessage());
+        }
+
+        return currencies;
+    }
 }
-}   

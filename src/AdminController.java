@@ -26,7 +26,7 @@ public class AdminController {
     private final int NUMOFTRANSACTIONPAGEHEIGHT = 600;
     private final int NUMOFTRANSACTIONPAGEWIDTH = 400;
 
-    private final String DATAPAGE = "StatisticDataInterface.fxml";
+    private final String DATAPAGE = "PieChartInterface.fxml";
     private final int DATAPAGEHEIGHT = 600;
     private final int DATAPAGEWIDTH = 400;
 
